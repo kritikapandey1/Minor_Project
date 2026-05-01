@@ -11,7 +11,8 @@ This minor project predicts diabetes risk using the PIMA/NIDDK diabetes dataset 
 - Compares Logistic Regression, KNN, SVM, Decision Tree, Random Forest, and Gradient Boosting.
 - Selects the best model using F1-score, recall, ROC-AUC, and accuracy.
 - Saves the final model with preprocessing.
-- Provides a Streamlit app for diabetes risk prediction and lifestyle recommendations.
+- Exports browser-friendly model parameters.
+- Provides a static HTML, CSS, and JavaScript website for diabetes risk prediction and lifestyle recommendations.
 
 ## Dataset Notes
 
@@ -28,17 +29,19 @@ Useful NIDDK reference pages:
 
 ```text
 .
-├── app.py
-├── requirements.txt
-├── README.md
-├── data/
-│   └── generated after training
-├── models/
-│   └── generated after training
-└── src/
-    ├── data_utils.py
-    ├── recommendations.py
-    └── train_model.py
+|-- index.html
+|-- script.js
+|-- styles.css
+|-- requirements.txt
+|-- README.md
+|-- data/
+|   `-- generated after training
+|-- models/
+|   `-- generated after training
+`-- src/
+    |-- data_utils.py
+    |-- recommendations.py
+    `-- train_model.py
 ```
 
 ## How to Run
@@ -55,10 +58,12 @@ Train models and save the best one:
 python src/train_model.py
 ```
 
-Start the app:
+Open the website:
+
+Double-click `index.html`, or run a simple local server and open `http://localhost:8000`.
 
 ```bash
-streamlit run app.py
+python -m http.server 8000
 ```
 
 ## Input Features

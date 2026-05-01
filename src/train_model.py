@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import sys
+import json
 
 import joblib
 import numpy as np
@@ -150,6 +151,21 @@ def main() -> None:
         "metrics": results_df.to_dict(orient="records"),
     }
     joblib.dump(artifact, model_dir / "diabetes_risk_model.joblib")
+
+    numeric_pipeline = best_pipeline.named_steps["preprocessor"].named_transformers_["numeric"]
+    selected_model = best_pipeline.named_steps["model"]
+    if hasattr(selected_model, "coef_") and hasattr(selected_model, "intercept_"):
+        browser_params = {
+            "model_name": best_name,
+            "features": FEATURE_COLUMNS,
+            "imputer_medians": numeric_pipeline.named_steps["imputer"].statistics_.tolist(),
+            "scaler_means": numeric_pipeline.named_steps["scaler"].mean_.tolist(),
+            "scaler_scales": numeric_pipeline.named_steps["scaler"].scale_.tolist(),
+            "coefficients": selected_model.coef_[0].tolist(),
+            "intercept": float(selected_model.intercept_[0]),
+        }
+        with open(model_dir / "model_parameters.json", "w", encoding="utf-8") as file:
+            json.dump(browser_params, file, indent=2)
 
     print("Model comparison:")
     print(results_df.round(4).to_string(index=False))
